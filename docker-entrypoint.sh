@@ -32,11 +32,17 @@ cd /
 #   Wrong passphrase for this key.  Please try again.
 #   2019-09-17 18:45:09,677 e6bd23049edb proftpd[7] e6bd23049edb: mod_sftp/1.0.0: error reading passphrase for SFTPHostKey '/etc/ssh/ssh_host_rsa_key': (unknown)
 #   2019-09-17 18:45:09,677 e6bd23049edb proftpd[7] e6bd23049edb: mod_sftp/1.0.0: unable to use key in SFTPHostKey '/etc/ssh/ssh_host_rsa_key', exiting
+#
+#
+
 if [ ! -e ${CONFPATH}/keys/ssh_host_rsa_key ]; then
-  ln -s ${CONFPATH}/keys /etc/ssh
-  ssh-keygen -A -m PEM
-  [ -n "$newkey" ] && chown ${owner} ${CONFPATH}/keys/*
-  rm /etc/ssh
+rm -rf /etc/ssh
+ln -s ${CONFPATH}/keys /etc/ssh
+ssh-keygen -A -m PEM
+find /etc/proftpd/sftp
+find /etc/ssh
+chown -R ${owner} ${CONFPATH}/keys/*
+rm /etc/ssh
 fi
 
 proftpd -n &
